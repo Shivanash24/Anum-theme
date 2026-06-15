@@ -47,11 +47,6 @@
 
   .header__navigation { display: none; }
 
-  @media screen and (min-width: 990px) {
-    .header__menu-toggle { display: none; }
-    .header__navigation { display: block; }
-  }
-
   .header__menu {
     list-style: none;
     padding: 0;
@@ -233,6 +228,11 @@
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+  }
+
+  @media screen and (min-width: 990px) {
+    .header__menu-toggle { display: none !important; }
+    .header__navigation { display: block; }
   }
 </style>
 
