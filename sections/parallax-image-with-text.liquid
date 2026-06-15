@@ -1,0 +1,202 @@
+<div class="parallax-iwt reveal">
+  <div class="parallax-iwt__container page-width">
+    <div class="parallax-iwt__image-wrapper">
+      {%- if section.settings.image != blank -%}
+        <div class="parallax-iwt__image" style="background-image: url('{{ section.settings.image | image_url: width: 1500 }}');" role="img" aria-label="{{ section.settings.image.alt | escape }}"></div>
+      {%- else -%}
+        <div class="parallax-iwt__image" style="background-color: #f4f4f4;">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+    
+    <div class="parallax-iwt__content {% if section.settings.layout == 'right' %}parallax-iwt__content--right{% endif %}">
+      <div class="parallax-iwt__text-box">
+        {%- if section.settings.subheading != blank -%}
+          <span class="parallax-iwt__subheading">{{ section.settings.subheading | escape }}</span>
+        {%- endif -%}
+        
+        {%- if section.settings.heading != blank -%}
+          <h2 class="parallax-iwt__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        
+        {%- if section.settings.text != blank -%}
+          <div class="parallax-iwt__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+        
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link }}" class="button button--primary">{{ section.settings.button_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.parallax-iwt {
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-iwt__container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
+}
+
+.parallax-iwt__image-wrapper {
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: var(--shadow-luxury);
+}
+
+.parallax-iwt__image {
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Parallax effect */
+  transition: transform 0.5s ease-out;
+}
+
+.parallax-iwt__content {
+  width: 100%;
+  padding: 40px 20px;
+  background: var(--color-background);
+}
+
+.parallax-iwt__text-box {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.parallax-iwt__subheading {
+  display: block;
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.parallax-iwt__heading {
+  font-family: var(--font-heading-family);
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  color: var(--color-foreground);
+}
+
+.parallax-iwt__text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+  color: var(--color-foreground);
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+  .parallax-iwt {
+    padding: 120px 0;
+  }
+  
+  .parallax-iwt__image-wrapper {
+    width: 60%;
+    height: 70vh;
+  }
+  
+  .parallax-iwt__content {
+    width: 50%;
+    position: absolute;
+    right: 0;
+    padding: 60px;
+    box-shadow: var(--shadow-luxury);
+  }
+  
+  .parallax-iwt__content--right {
+    left: 0;
+    right: auto;
+  }
+  
+  .parallax-iwt__text-box {
+    text-align: left;
+  }
+}
+
+/* Fix for mobile parallax */
+@media (max-width: 767px) {
+  .parallax-iwt__image {
+    background-attachment: scroll;
+    top: 0;
+    height: 100%;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Parallax Image w/ Text",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        { "value": "left", "label": "Image Left" },
+        { "value": "right", "label": "Image Right" }
+      ],
+      "default": "left",
+      "label": "Desktop Layout"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "The Heritage"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A Legacy of Time"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Discover the meticulous craftsmanship that goes into every piece. A true testament to luxury and precision.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Discover More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Parallax Image w/ Text"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,129 @@
+{%- if page.handle == 'about-us' or page.handle == 'about' -%}
+
+<style>
+  .about-page { overflow: hidden; }
+  .about-hero { position: relative; height: 85vh; width: 100%; overflow: hidden; }
+  .about-hero__img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+  .about-hero__overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.72) 100%); }
+  .about-hero__content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 5rem 2rem; text-align: center; }
+  .about-hero__eyebrow { font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 1.2rem; }
+  .about-hero__title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 6rem); font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; line-height: 1; margin: 0 0 2rem; }
+  .about-hero__line { width: 50px; height: 1px; background: rgba(255,255,255,0.45); }
+
+  .about-quote { padding: 7rem 2rem; text-align: center; max-width: 900px; margin: 0 auto; }
+  .about-quote__mark { font-family: 'Cormorant Garamond', serif; font-size: 5rem; line-height: 0.5; color: var(--color-accent, #c9a84c); opacity: 0.5; display: block; margin-bottom: 1.5rem; }
+  .about-quote__text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem, 3vw, 2.5rem); font-weight: 300; font-style: italic; line-height: 1.5; color: var(--color-foreground); letter-spacing: 0.02em; }
+  .about-quote__author { font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-foreground); opacity: 0.5; margin-top: 2rem; display: block; }
+
+  .about-split { display: grid; grid-template-columns: 1fr 1fr; min-height: 80vh; }
+  @media (max-width: 768px) { .about-split { grid-template-columns: 1fr; } }
+  .about-split__image { position: relative; overflow: hidden; }
+  .about-split__image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 8s ease; }
+  .about-split__image:hover img { transform: scale(1.04); }
+  .about-split__text { background: #0a0a0a; display: flex; flex-direction: column; justify-content: center; padding: 6rem 5rem; }
+  @media (max-width: 1024px) { .about-split__text { padding: 4rem 3rem; } }
+  .about-split__eyebrow { font-family: 'Jost', sans-serif; font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--color-accent, #c9a84c); margin-bottom: 1.5rem; }
+  .about-split__heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; line-height: 1.1; margin: 0 0 2rem; }
+  .about-split__body { font-family: 'Jost', sans-serif; font-size: 0.95rem; line-height: 1.9; color: rgba(255,255,255,0.65); }
+  .about-split__body p { margin-bottom: 1.2rem; }
+  .about-split__divider { width: 40px; height: 1px; background: var(--color-accent, #c9a84c); margin: 2.5rem 0; }
+
+  .about-stats { background: var(--color-accent, #c9a84c); display: grid; grid-template-columns: repeat(4, 1fr); padding: 5rem 2rem; }
+  @media (max-width: 768px) { .about-stats { grid-template-columns: repeat(2, 1fr); gap: 3rem 0; } }
+  .about-stats__item { text-align: center; border-right: 1px solid rgba(0,0,0,0.15); padding: 0 2rem; }
+  .about-stats__item:last-child { border-right: none; }
+  .about-stats__number { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 300; color: #0a0a0a; line-height: 1; display: block; }
+  .about-stats__label { font-family: 'Jost', sans-serif; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(0,0,0,0.6); margin-top: 0.75rem; display: block; }
+
+  .about-values { padding: 8rem 2rem; max-width: 1400px; margin: 0 auto; text-align: center; }
+  .about-values__heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-foreground); margin-bottom: 1rem; }
+  .about-values__sub { font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--color-foreground); opacity: 0.5; letter-spacing: 0.1em; margin-bottom: 5rem; }
+  .about-values__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem 3rem; }
+  @media (max-width: 768px) { .about-values__grid { grid-template-columns: 1fr; } }
+  .about-values__card { text-align: left; padding-top: 2rem; border-top: 1px solid var(--color-border); }
+  .about-values__icon { font-size: 2rem; margin-bottom: 1.5rem; display: block; }
+  .about-values__title { font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-foreground); margin-bottom: 1rem; }
+  .about-values__text { font-family: 'Jost', sans-serif; font-size: 0.9rem; line-height: 1.8; color: var(--color-foreground); opacity: 0.6; }
+
+  .about-cta { position: relative; background: #0a0a0a; padding: 8rem 2rem; text-align: center; overflow: hidden; }
+  .about-cta::before { content: 'AURUM'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Cormorant Garamond', serif; font-size: clamp(8rem, 18vw, 16rem); font-weight: 700; color: rgba(255,255,255,0.03); pointer-events: none; white-space: nowrap; line-height: 1; }
+  .about-cta__eyebrow { font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--color-accent, #c9a84c); margin-bottom: 1.5rem; display: block; }
+  .about-cta__heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; margin-bottom: 2.5rem; }
+  .about-cta .button { border: 1px solid rgba(255,255,255,0.5); color: #fff; background: transparent; padding: 1rem 3rem; }
+  .about-cta .button:hover { background: var(--color-accent, #c9a84c); border-color: var(--color-accent, #c9a84c); color: #0a0a0a; }
+</style>
+
+<div class="about-page">
+  <div class="about-hero">
+    <img class="about-hero__img" src="{{ 'about_hero_watch.jpg' | asset_url }}" alt="Master Watchmaker" width="1400" height="900" loading="eager" fetchpriority="high">
+    <div class="about-hero__overlay"></div>
+    <div class="about-hero__content">
+      <p class="about-hero__eyebrow">Est. 1951 &mdash; Geneva, Switzerland</p>
+      <h1 class="about-hero__title">Our Story</h1>
+      <div class="about-hero__line"></div>
+    </div>
+  </div>
+
+  <div class="about-quote">
+    <span class="about-quote__mark">&ldquo;</span>
+    <p class="about-quote__text">Time is the most precious of all things. We dedicate our lives to making sure you wear it with dignity.</p>
+    <span class="about-quote__author">&mdash; Founder, Aurum Atelier</span>
+  </div>
+
+  <div class="about-split">
+    <div class="about-split__image">
+      <img src="{{ 'about_craft_image.jpg' | asset_url }}" alt="Watch movement craftsmanship" width="900" height="1100" loading="lazy" loading="lazy">
+    </div>
+    <div class="about-split__text">
+      <p class="about-split__eyebrow">Our Heritage</p>
+      <h2 class="about-split__heading">75 Years of<br>Unrivalled Craft</h2>
+      <div class="about-split__divider"></div>
+      <div class="about-split__body">
+        <p>Born in the workshops of Geneva in 1951, Aurum was founded on a singular obsession: the relentless pursuit of perfection. What began as a small atelier crafting bespoke timepieces for European royalty has evolved into one of the world's most coveted watch houses.</p>
+        <p>Each Aurum timepiece contains hundreds of hand-assembled components, brought together by master horologists who have dedicated their lives to this art. We do not mass produce. We simply create the finest watches the world has ever seen.</p>
+        <p>Today, Aurum watches are worn by heads of state, celebrated artists, and discerning collectors across 48 countries — each one a testament to a legacy that will endure for generations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-stats">
+    <div class="about-stats__item"><span class="about-stats__number">75+</span><span class="about-stats__label">Years of Heritage</span></div>
+    <div class="about-stats__item"><span class="about-stats__number">12K</span><span class="about-stats__label">Timepieces Crafted</span></div>
+    <div class="about-stats__item"><span class="about-stats__number">48</span><span class="about-stats__label">Countries Served</span></div>
+    <div class="about-stats__item"><span class="about-stats__number">500h</span><span class="about-stats__label">Testing Per Watch</span></div>
+  </div>
+
+  <div class="about-values">
+    <h2 class="about-values__heading">Our Pillars</h2>
+    <p class="about-values__sub">The principles that guide every single decision we make</p>
+    <div class="about-values__grid">
+      <div class="about-values__card"><span class="about-values__icon">⌚</span><p class="about-values__title">Precision</p><p class="about-values__text">Every component is measured to within microns of perfection. We accept nothing less than absolute mechanical accuracy in every timepiece that leaves our atelier.</p></div>
+      <div class="about-values__card"><span class="about-values__icon">🔬</span><p class="about-values__title">Craftsmanship</p><p class="about-values__text">Our master horologists undergo 10 years of training before touching a single Aurum movement. Their hands are the most important tools we possess.</p></div>
+      <div class="about-values__card"><span class="about-values__icon">💎</span><p class="about-values__title">Rarity</p><p class="about-values__text">We produce fewer than 2,000 watches per year. Each one is individually numbered and comes with a certificate of authenticity that spans generations.</p></div>
+    </div>
+  </div>
+
+  <div class="about-cta">
+    <span class="about-cta__eyebrow">Begin Your Journey</span>
+    <h2 class="about-cta__heading">Discover the Collection</h2>
+    <a href="/collections/all" class="button">Explore Watches</a>
+  </div>
+</div>
+
+{%- else -%}
+  <div class="page page-width">
+    <div class="page__header center">
+      <h1>{{ page.title | escape }}</h1>
+    </div>
+    <div class="page__content rte">
+      {{ page.content }}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Page",
+  "settings": []
+}
+{% endschema %}

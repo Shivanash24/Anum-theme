@@ -1,0 +1,201 @@
+<style>
+  .lookbook-grid {
+    padding: 2rem 0;
+    background-color: var(--color-background);
+  }
+
+  .lookbook__container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .lookbook__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .lookbook__title {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    margin: 0;
+  }
+
+  .lookbook__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .lookbook__layout {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .lookbook__layout {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 300px);
+    }
+    
+    .lookbook__item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .lookbook__item:nth-child(2) { grid-column: span 2; grid-row: span 1; }
+    .lookbook__item:nth-child(3) { grid-column: span 1; grid-row: span 1; }
+    .lookbook__item:nth-child(4) { grid-column: span 1; grid-row: span 1; }
+  }
+
+  .lookbook__item {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    background-color: #111;
+  }
+
+  .lookbook__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: block;
+  }
+
+  .lookbook__item:hover .lookbook__image {
+    transform: scale(1.08);
+  }
+
+  .lookbook__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .lookbook__item:hover .lookbook__overlay {
+    opacity: 1;
+  }
+
+  .lookbook__text {
+    color: #fff;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+  }
+
+  .lookbook__item:hover .lookbook__text {
+    transform: translateY(0);
+  }
+</style>
+
+<section class="lookbook-grid">
+  <div class="lookbook__container">
+    {%- if section.settings.title != blank -%}
+      <div class="lookbook__header reveal">
+        <h2 class="lookbook__title">{{ section.settings.title }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="lookbook__layout">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign target_image = block.settings.image
+          assign target_title = block.settings.title
+          assign target_link = block.settings.link | default: '#'
+          
+          if block.settings.product != blank
+            assign target_image = target_image | default: block.settings.product.featured_image
+            assign target_title = target_title | default: block.settings.product.title
+            assign target_link = block.settings.product.url
+          elsif block.settings.collection != blank
+            assign target_image = target_image | default: block.settings.collection.image | default: block.settings.collection.products.first.featured_image
+            assign target_title = target_title | default: block.settings.collection.title
+            assign target_link = block.settings.collection.url
+          endif
+        -%}
+        <a href="{{ target_link }}" class="lookbook__item reveal reveal-delay-{{ forloop.index }}" {{ block.shopify_attributes }}>
+          {%- if target_image != blank -%}
+            <img src="{{ target_image | image_url: width: 1200 }}" class="lookbook__image" loading="lazy" width="1200" height="{{ 1200 | divided_by: target_image.aspect_ratio | ceil }}" alt="{{ target_title | escape }}" loading="lazy">
+          {%- else -%}
+            <img src="{{ 'lookbook_watch_' | append: forloop.index | append: '.png' | asset_url }}" class="lookbook__image" loading="lazy" width="600" height="800" alt="{{ target_title | escape }}" loading="lazy">
+          {%- endif -%}
+          <div class="lookbook__overlay">
+            <span class="lookbook__text">{{ target_title }}</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lookbook Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "The Collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Lookbook Item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Select a product to automatically use its image, title, and link."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Select a collection to automatically use its image, title, and link."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Image",
+          "info": "Overrides product/collection image."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Title",
+          "info": "Overrides product/collection title."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Custom Link",
+          "info": "Overrides product/collection link."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook Grid",
+      "blocks": [
+        { "type": "image", "settings": { "title": "The Aviator" } },
+        { "type": "image", "settings": { "title": "Deep Dive" } },
+        { "type": "image", "settings": { "title": "Classic Prestige" } },
+        { "type": "image", "settings": { "title": "Heritage Collection" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

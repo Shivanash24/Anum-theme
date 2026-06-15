@@ -1,0 +1,97 @@
+{
+  "layout": "theme",
+  "sections": {
+    "image-slider": {
+      "type": "image-slider",
+      "blocks": {
+        "slide-1": { "type": "slide" },
+        "slide-2": { "type": "slide" },
+        "slide-3": { "type": "slide" }
+      },
+      "block_order": ["slide-1", "slide-2", "slide-3"],
+      "settings": {}
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {}
+    },
+    "marquee-strip": {
+      "type": "marquee-strip",
+      "settings": {}
+    },
+    "brand-stats": {
+      "type": "brand-stats",
+      "blocks": {
+        "stat-1": { "type": "stat", "settings": { "number": "75", "suffix": "+", "label": "Years of Heritage" } },
+        "stat-2": { "type": "stat", "settings": { "number": "12", "suffix": "k", "label": "Timepieces Crafted" } },
+        "stat-3": { "type": "stat", "settings": { "number": "48", "suffix": "", "label": "Countries Served" } },
+        "stat-4": { "type": "stat", "settings": { "number": "99", "suffix": "%", "label": "Client Satisfaction" } }
+      },
+      "block_order": ["stat-1", "stat-2", "stat-3", "stat-4"],
+      "settings": {}
+    },
+    "luxury-story": {
+      "type": "luxury-story",
+      "settings": {}
+    },
+    "lookbook-grid": {
+      "type": "lookbook-grid",
+      "blocks": {
+        "l-1": { "type": "image", "settings": { "title": "The Aviator" } },
+        "l-2": { "type": "image", "settings": { "title": "Deep Dive" } },
+        "l-3": { "type": "image", "settings": { "title": "Classic" } },
+        "l-4": { "type": "image", "settings": { "title": "Heritage" } }
+      },
+      "block_order": ["l-1", "l-2", "l-3", "l-4"],
+      "settings": {}
+    },
+    "craftsmanship-steps": {
+      "type": "craftsmanship-steps",
+      "blocks": {
+        "c-1": { "type": "step", "settings": { "title": "Vision & Design", "text": "Every timepiece begins as a vision, meticulously sketched and engineered to perfection." } },
+        "c-2": { "type": "step", "settings": { "title": "Material Selection", "text": "We source only the finest materials, from conflict-free diamonds to aerospace-grade titanium." } },
+        "c-3": { "type": "step", "settings": { "title": "Master Assembly", "text": "Our master horologists assemble hundreds of microscopic components by hand." } },
+        "c-4": { "type": "step", "settings": { "title": "Rigorous Testing", "text": "Each watch undergoes 500 hours of testing to ensure flawless performance under any condition." } }
+      },
+      "block_order": ["c-1", "c-2", "c-3", "c-4"],
+      "settings": {}
+    },
+    "cta-banner": {
+      "type": "cta-banner",
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "t-1": { "type": "testimonial", "settings": { "quote": "An extraordinary piece of horology. The craftsmanship is unrivalled and the experience of owning it is truly transformative.", "author": "James Whitfield", "author_title": "Collector, London" } },
+        "t-2": { "type": "testimonial", "settings": { "quote": "I have owned timepieces from all the great houses, but Aurum stands in a class entirely its own. A true masterpiece.", "author": "Sophia Laurent", "author_title": "Art Curator, Paris" } },
+        "t-3": { "type": "testimonial", "settings": { "quote": "The attention to detail is breathtaking. From the movement to the delivery, every step of the journey felt like a privilege.", "author": "Hiroshi Nakamura", "author_title": "Entrepreneur, Tokyo" } },
+        "t-4": { "type": "testimonial", "settings": { "quote": "Aurum redefined my understanding of luxury. The watch I received is not merely a timepiece — it is a work of art.", "author": "Alessandro Romano", "author_title": "Architect, Milan" } }
+      },
+      "block_order": ["t-1", "t-2", "t-3", "t-4"],
+      "settings": {}
+    },
+    "hero": {
+      "type": "hero-banner",
+      "blocks": {
+        "heading": { "type": "heading" },
+        "text": { "type": "text" },
+        "buttons": { "type": "buttons" }
+      },
+      "block_order": ["heading", "text", "buttons"],
+      "settings": {}
+    }
+  },
+  "order": [
+    "image-slider",
+    "marquee-strip",
+    "featured-collection",
+    "lookbook-grid",
+    "brand-stats",
+    "craftsmanship-steps",
+    "luxury-story",
+    "cta-banner",
+    "testimonials",
+    "hero"
+  ]
+}

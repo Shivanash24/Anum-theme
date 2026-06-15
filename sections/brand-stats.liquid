@@ -1,0 +1,156 @@
+<style>
+  .brand-stats-section {
+    padding: 6rem 0;
+    background-color: var(--color-foreground);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Decorative diagonal lines */
+  .brand-stats-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 120%;
+    height: 200%;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.02) 40px,
+      rgba(255,255,255,0.02) 42px
+    );
+    pointer-events: none;
+  }
+
+  .brand-stats__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+
+  @media screen and (min-width: 768px) {
+    .brand-stats__inner {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .brand-stats__item {
+    padding: 3rem 2rem;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.3s ease;
+  }
+
+  .brand-stats__item:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  @media screen and (min-width: 768px) {
+    .brand-stats__item:last-child,
+    .brand-stats__item:nth-child(4) {
+      border-right: none;
+    }
+  }
+
+  .brand-stats__number {
+    display: block;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    color: var(--color-accent);
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-heading-family);
+  }
+
+  .brand-stats__suffix {
+    font-size: 0.55em;
+    vertical-align: super;
+    font-weight: 300;
+  }
+
+  .brand-stats__label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-background);
+    opacity: 0.7;
+    font-weight: 400;
+  }
+</style>
+
+<section class="brand-stats-section">
+  <div class="page-width">
+    <div class="brand-stats__inner">
+      {%- for block in section.blocks -%}
+        <div class="brand-stats__item" {{ block.shopify_attributes }}>
+          <span class="brand-stats__number">
+            {{ block.settings.number }}<span class="brand-stats__suffix">{{ block.settings.suffix }}</span>
+          </span>
+          <span class="brand-stats__label">{{ block.settings.label }}</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Stats",
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "75"
+        },
+        {
+          "type": "text",
+          "id": "suffix",
+          "label": "Suffix (e.g. +, k, %)",
+          "default": "+"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Years of Heritage"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Stats",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": { "number": "75", "suffix": "+", "label": "Years of Heritage" }
+        },
+        {
+          "type": "stat",
+          "settings": { "number": "12", "suffix": "k", "label": "Timepieces Crafted" }
+        },
+        {
+          "type": "stat",
+          "settings": { "number": "48", "suffix": "", "label": "Countries Served" }
+        },
+        {
+          "type": "stat",
+          "settings": { "number": "99", "suffix": "%", "label": "Client Satisfaction" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

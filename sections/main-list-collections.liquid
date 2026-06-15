@@ -1,0 +1,58 @@
+<div class="list-collections page-width">
+  <div class="list-collections__header center">
+    <h1>{{ section.settings.heading | escape }}</h1>
+  </div>
+
+  {%- paginate collections by section.settings.collections_per_page -%}
+    <ul class="grid grid--3-col">
+      {%- for collection in collections -%}
+        <li class="grid__item">
+          <a href="{{ collection.url }}" class="collection-card">
+            <div class="collection-card__image">
+              {%- if collection.image != blank -%}
+                <img src="{{ collection.image | image_url: width: 600 }}"
+                     alt="{{ collection.title | escape }}"
+                     width="600"
+                     height="{{ 600 | divided_by: collection.image.aspect_ratio | ceil }}"
+                     loading="lazy">
+              {%- elsif collection.products.first and collection.products.first.featured_image != blank -%}
+                 <img src="{{ collection.products.first.featured_image | image_url: width: 600 }}"
+                     alt="{{ collection.title | escape }}"
+                     width="600"
+                     height="{{ 600 | divided_by: collection.products.first.featured_image.aspect_ratio | ceil }}"
+                     loading="lazy">
+              {%- else -%}
+                <img src="{{ 'luxury_watch_lifestyle.jpg' | asset_url }}" alt="Collection" width="800" height="800" style="width: 100%; height: auto;" loading="lazy">
+              {%- endif -%}
+            </div>
+            <h3 class="collection-card__title">{{ collection.title | escape }}</h3>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Collections list page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Collections",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "collections_per_page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 12,
+      "label": "Collections per page"
+    }
+  ]
+}
+{% endschema %}

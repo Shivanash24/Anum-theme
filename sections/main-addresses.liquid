@@ -1,0 +1,47 @@
+<div class="customer addresses page-width center">
+  <h1>Addresses</h1>
+  <a href="{{ routes.account_url }}">Return to Account details</a>
+
+  <div class="addresses__list">
+    <div class="address-add">
+      <button class="button">Add a new address</button>
+      <div id="AddAddress" style="display: none;">
+        <h2>Add a new address</h2>
+        {%- form 'customer_address', customer.new_address -%}
+          <!-- Minimal address form fields for compliance -->
+          <div class="field"><input type="text" id="AddressFirstNameNew" name="address[first_name]" value="{{ form.first_name }}" placeholder="First name"></div>
+          <div class="field"><input type="text" id="AddressLastNameNew" name="address[last_name]" value="{{ form.last_name }}" placeholder="Last name"></div>
+          <div class="field"><input type="text" id="AddressAddress1New" name="address[address1]" value="{{ form.address1 }}" placeholder="Address 1"></div>
+          <div class="field"><input type="text" id="AddressCityNew" name="address[city]" value="{{ form.city }}" placeholder="City"></div>
+          <div class="field">
+            <select id="AddressCountryNew" name="address[country]" data-default="{{ form.country }}">{{ all_country_option_tags }}</select>
+          </div>
+          <div class="field"><input type="text" id="AddressZipNew" name="address[zip]" value="{{ form.zip }}" placeholder="Postal code"></div>
+          <button class="button">Add address</button>
+        {%- endform -%}
+      </div>
+    </div>
+
+    <ul>
+      {%- for address in customer.addresses -%}
+        <li class="address-item">
+          {%- if address == customer.default_address -%}
+            <h2>Default</h2>
+          {%- endif -%}
+          {{ address | format_address }}
+          <form class="address-delete-form" method="post" action="{{ routes.account_addresses_url }}/{{ address.id }}">
+            <input type="hidden" name="_method" value="delete">
+            <button class="button button--secondary">Delete</button>
+          </form>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Addresses",
+  "settings": []
+}
+{% endschema %}

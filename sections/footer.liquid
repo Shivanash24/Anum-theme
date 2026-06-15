@@ -1,0 +1,376 @@
+<style>
+  .footer {
+    background-color: #0a0a0a;
+    color: #f4f4f4;
+    padding: 6rem 0 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-body-family);
+  }
+
+  .footer__inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .footer__inner {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .footer__inner {
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 3rem;
+    }
+  }
+
+  .footer__block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer .footer__heading {
+    font-family: var(--font-heading-family);
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    color: #ffffff !important;
+    font-weight: 400;
+  }
+
+  .footer .footer__text, 
+  .footer .footer__text p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #cccccc !important;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer__list li {
+    margin-bottom: 1rem;
+  }
+
+  .footer .footer__list a {
+    color: #cccccc !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .footer .footer__list a:hover {
+    color: #ffffff !important;
+  }
+
+  .footer__newsletter {
+    margin-top: 1rem;
+  }
+
+  .newsletter-form__field-wrapper {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 0.5rem;
+  }
+
+  .newsletter-form__field-wrapper input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    flex-grow: 1;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+  }
+
+  .newsletter-form__field-wrapper input:focus {
+    outline: none;
+  }
+
+  .footer .newsletter-form__button {
+    background: transparent;
+    border: none;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .footer .newsletter-form__button:hover {
+    color: var(--color-accent, #d4af37) !important;
+  }
+
+  .footer__bottom {
+    max-width: 1400px;
+    margin: 4rem auto 0;
+    padding: 2rem 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media screen and (min-width: 768px) {
+    .footer__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  .footer__social {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .footer__social {
+      margin-bottom: 0;
+    }
+  }
+
+  .footer .footer__social a {
+    color: #cccccc !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer .footer__social a svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    transition: transform 0.3s ease;
+  }
+
+  .footer .footer__social a:hover {
+    color: #ffffff !important;
+  }
+
+  .footer .footer__social a:hover svg {
+    transform: translateY(-3px);
+  }
+
+  .footer .footer__copyright {
+    color: #aaaaaa !important;
+    font-size: 0.85rem;
+  }
+</style>
+
+<footer class="footer">
+  <div class="footer__inner">
+    {%- for block in section.blocks -%}
+      <div class="footer__block" {{ block.shopify_attributes }}>
+        {%- if block.settings.heading != blank -%}
+          <h2 class="footer__heading">{{ block.settings.heading }}</h2>
+        {%- endif -%}
+
+        {%- case block.type -%}
+          {%- when 'text' -%}
+            <div class="footer__text">
+              {{ block.settings.text }}
+            </div>
+          
+          {%- when 'link_list' -%}
+            <ul class="footer__list">
+              {%- if block.settings.menu != blank -%}
+                {%- for link in linklists[block.settings.menu].links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              {%- else -%}
+                <li><a href="/">Home</a></li>
+                <li><a href="/collections/all">Collections</a></li>
+                <li><a href="/pages/about">Our Story</a></li>
+                <li><a href="/pages/contact">Boutique Locations</a></li>
+                <li><a href="/blogs/news">Journal</a></li>
+              {%- endif -%}
+            </ul>
+          
+          {%- when 'newsletter' -%}
+            <div class="footer__newsletter">
+              <div class="footer__text">{{ block.settings.text }}</div>
+              {%- form 'customer', id: 'ContactFooter' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="newsletter-form__field-wrapper">
+                  <input
+                    id="NewsletterForm--{{ section.id }}"
+                    type="email"
+                    name="contact[email]"
+                    value="{{ form.email }}"
+                    aria-required="true"
+                    placeholder="Enter your email"
+                    required
+                  >
+                  <button type="submit" class="newsletter-form__button" name="commit">
+                    Join
+                  </button>
+                </div>
+                {%- if form.posted_successfully? -%}
+                  <p class="footer__text" style="color: #4caf50; margin-top: 1rem;">Welcome to the inner circle.</p>
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="footer__bottom">
+    {%- if section.settings.show_social -%}
+      <ul class="footer__social">
+        {%- if section.settings.social_instagram != blank -%}
+          <li><a href="{{ section.settings.social_instagram }}" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a></li>
+        {%- endif -%}
+        {%- if section.settings.social_facebook != blank -%}
+          <li><a href="{{ section.settings.social_facebook }}" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a></li>
+        {%- endif -%}
+        {%- if section.settings.social_twitter != blank -%}
+          <li><a href="{{ section.settings.social_twitter }}" aria-label="Twitter">
+            <svg viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.184 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+          </a></li>
+        {%- endif -%}
+        {%- if section.settings.social_youtube != blank -%}
+          <li><a href="{{ section.settings.social_youtube }}" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a></li>
+        {%- endif -%}
+        {%- if section.settings.social_instagram == blank and section.settings.social_facebook == blank and section.settings.social_twitter == blank and section.settings.social_youtube == blank -%}
+          <!-- Default icons if no links set -->
+          <li><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a></li>
+          <li><a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a></li>
+        {%- endif -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="footer__copyright">
+      &copy; {{ 'now' | date: "%Y" }}, {{ shop.name }}. All rights reserved. Designed for excellence.
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Social Media Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social media icons",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram Link"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook Link"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "Twitter Link"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube Link"
+    }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "About Us"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Discover the finest luxury timepieces in our exclusive boutique. Precision, elegance, and a heritage of excellence.</p>"
+        }
+      ]
+    },
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Quick links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Subscribe"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Join our private mailing list for exclusive releases and insider news.</p>"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "text", "settings": { "heading": "AURUM" } },
+      { "type": "link_list", "settings": { "heading": "Explore" } },
+      { "type": "link_list", "settings": { "heading": "Support" } },
+      { "type": "newsletter", "settings": { "heading": "Subscribe" } }
+    ]
+  }
+}
+{% endschema %}

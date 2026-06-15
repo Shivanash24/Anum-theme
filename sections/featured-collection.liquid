@@ -1,0 +1,200 @@
+<style>
+  .featured-collection {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    background-color: var(--color-background);
+  }
+  
+  .featured-collection__title {
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+    color: var(--color-foreground);
+  }
+  
+  .product-card {
+    display: block;
+    text-align: center;
+  }
+  
+  .product-card__image-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background);
+  }
+  
+  .product-card__image-wrapper img {
+    transition: transform 0.8s ease-out;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .product-card:hover .product-card__image-wrapper img {
+    transform: scale(1.04);
+  }
+  
+  .product-card__badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    padding: 0.4rem 0.8rem;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+  
+  .product-card__title {
+    font-size: 0.95rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    color: var(--color-foreground);
+  }
+  
+  .product-card .price {
+    font-size: 1rem;
+    color: var(--color-accent);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+  
+  .featured-collection .center {
+    margin-top: 4rem;
+  }
+  
+  .featured-collection .button {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--color-foreground);
+    border: 1px solid var(--color-foreground);
+    padding: 0.8rem 3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .featured-collection .button:hover {
+    background-color: var(--color-accent);
+    color: var(--color-button-text);
+    border-color: var(--color-accent);
+  }
+</style>
+
+<div class="featured-collection">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <h2 class="featured-collection__title center">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+
+    <ul class="grid grid--3-col">
+      {%- assign products_to_display = section.settings.product_list -%}
+      {%- if products_to_display == blank -%}
+        {%- assign products_to_display = section.settings.collection.products -%}
+      {%- endif -%}
+
+      {%- for product in products_to_display limit: section.settings.products_to_show -%}
+        <li class="grid__item reveal reveal-delay-{{ forloop.index }}">
+          {% render 'product-card', product: product %}
+        </li>
+      {%- else -%}
+        {%- for i in (1..3) -%}
+          <li class="grid__item reveal reveal-delay-{{ forloop.index }}">
+            <div class="product-card">
+              <a href="#" class="product-card__link">
+                <div class="product-card__image-wrapper">
+                  {%- if i == 1 -%}
+                    <span class="product-card__badge">New</span>
+                    <img src="{{ 'product_watch_1.jpg' | asset_url }}" alt="Ocean Blue Chronograph" loading="lazy" loading="lazy">
+                  {%- elsif i == 2 -%}
+                    <img src="{{ 'product_watch_2.jpg' | asset_url }}" alt="Gold Submariner Edition" loading="lazy" loading="lazy">
+                  {%- else -%}
+                    <img src="{{ 'product_watch_3.jpg' | asset_url }}" alt="Rose Gold Classic" loading="lazy" loading="lazy">
+                  {%- endif -%}
+                </div>
+                <div class="product-card__info">
+                  {%- if i == 1 -%}
+                    <h3 class="product-card__title">Ocean Blue Chronograph</h3>
+                    <div class="price">$18,500.00</div>
+                  {%- elsif i == 2 -%}
+                    <h3 class="product-card__title">Gold Submariner Edition</h3>
+                    <div class="price">$28,000.00</div>
+                  {%- else -%}
+                    <h3 class="product-card__title">Rose Gold Classic</h3>
+                    <div class="price">$22,400.00</div>
+                  {%- endif -%}
+                </div>
+              </a>
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endfor -%}
+    </ul>
+    
+    {%- if section.settings.show_view_all and section.settings.collection.all_products_count > section.settings.products_to_show -%}
+      <div class="center">
+        <a href="{{ section.settings.collection.url }}" class="button">View all</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Featured Collection",
+      "label": "Heading"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "product_list",
+      "id": "product_list",
+      "label": "Selected Products",
+      "info": "Select specific products. If left empty, the collection above will be used."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 3,
+      "label": "Maximum products to show"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": true,
+      "label": "Enable \"View all\" button if collection has more products than shown"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,81 @@
+<div class="brand-timeline">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="brand-timeline__heading center">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <div class="brand-timeline__events">
+      {%- for block in section.blocks -%}
+        <div class="brand-timeline__event" {{ block.shopify_attributes }}>
+          <div class="brand-timeline__year">{{ block.settings.year }}</div>
+          <div class="brand-timeline__content">
+            {%- if block.settings.image != blank -%}
+              <img src="{{ block.settings.image | image_url: width: 500 }}"
+                   alt="{{ block.settings.image.alt | escape }}"
+                   width="500"
+                   height="{{ 500 | divided_by: block.settings.image.aspect_ratio | ceil }}"
+                   loading="lazy">
+            {%- endif -%}
+            <h3>{{ block.settings.title }}</h3>
+            <p>{{ block.settings.text }}</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brand Timeline",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Our Heritage",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "event",
+      "name": "Timeline Event",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "default": "1950",
+          "label": "Year"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "The Beginning",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "default": "A new standard in precision was born.",
+          "label": "Text"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Timeline",
+      "blocks": [
+        { "type": "event" },
+        { "type": "event" },
+        { "type": "event" }
+      ]
+    }
+  ]
+}
+{% endschema %}

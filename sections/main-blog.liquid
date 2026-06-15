@@ -1,0 +1,68 @@
+<div class="main-blog page-width">
+  <h1 class="center">{{ blog.title | escape }}</h1>
+
+  {%- paginate blog.articles by section.settings.articles_per_page -%}
+    <div class="blog-articles grid grid--3-col">
+      {%- for article in blog.articles -%}
+        <div class="grid__item article-card">
+          {%- if section.settings.show_image and article.image -%}
+            <a href="{{ article.url }}" class="article-card__image-wrapper">
+              <img src="{{ article.image | image_url: width: 600 }}"
+                   alt="{{ article.image.alt | escape }}"
+                   width="600"
+                   height="{{ 600 | divided_by: article.image.aspect_ratio | ceil }}"
+                   loading="lazy">
+            </a>
+          {%- endif -%}
+          <div class="article-card__info">
+            <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+            {%- if section.settings.show_date -%}
+              <span class="article-card__date">{{ article.published_at | time_tag: format: 'date' }}</span>
+            {%- endif -%}
+            {%- if section.settings.show_author -%}
+              <span class="article-card__author">{{ article.author }}</span>
+            {%- endif -%}
+            <p>{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+            <a href="{{ article.url }}" class="button button--secondary">Read more</a>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Blog",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "min": 3,
+      "max": 12,
+      "step": 3,
+      "default": 6,
+      "label": "Articles per page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "Show featured image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": true,
+      "label": "Show author"
+    }
+  ]
+}
+{% endschema %}

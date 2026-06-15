@@ -1,0 +1,58 @@
+<div class="faq page-width">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="center">{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+
+  <div class="faq__accordion">
+    {%- for block in section.blocks -%}
+      <details class="faq__item" {{ block.shopify_attributes }}>
+        <summary class="faq__question">{{ block.settings.question | escape }}</summary>
+        <div class="faq__answer">{{ block.settings.answer }}</div>
+      </details>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Frequently Asked Questions",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "default": "What is the warranty period?",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "default": "<p>All our timepieces come with a 5-year international warranty.</p>",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "faq_item" },
+        { "type": "faq_item" },
+        { "type": "faq_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

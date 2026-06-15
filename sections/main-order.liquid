@@ -1,0 +1,68 @@
+<div class="customer order page-width">
+  <div class="customer__header">
+    <h1>Order {{ order.name }}</h1>
+    <a href="{{ routes.account_url }}">Return to Account details</a>
+    <p>Placed on {{ order.created_at | time_tag: format: 'date_at_time' }}</p>
+    {%- if order.cancelled -%}
+      <div class="order--cancelled">
+        <p>Order Cancelled on {{ order.cancelled_at | time_tag: format: 'date_at_time' }}</p>
+        <p>Reason: {{ order.cancel_reason_label }}</p>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="grid grid--2-col">
+    <div class="grid__item">
+      <table role="table" class="order-details">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>SKU</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for line_item in order.line_items -%}
+            <tr>
+              <td>
+                <a href="{{ line_item.url }}">{{ line_item.title }}</a>
+              </td>
+              <td>{{ line_item.sku }}</td>
+              <td>{{ line_item.price | money }}</td>
+              <td>{{ line_item.quantity }}</td>
+              <td>{{ line_item.final_line_price | money }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">Subtotal</td>
+            <td>{{ order.line_items_subtotal_price | money }}</td>
+          </tr>
+          <tr>
+            <td colspan="4">Total</td>
+            <td><strong>{{ order.total_net_amount | money_with_currency }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="grid__item">
+      <h2>Billing Address</h2>
+      <p><strong>Payment Status:</strong> {{ order.financial_status_label }}</p>
+      {{ order.billing_address | format_address }}
+
+      <h2>Shipping Address</h2>
+      <p><strong>Fulfillment Status:</strong> {{ order.fulfillment_status_label }}</p>
+      {{ order.shipping_address | format_address }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Order",
+  "settings": []
+}
+{% endschema %}

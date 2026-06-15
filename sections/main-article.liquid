@@ -1,0 +1,55 @@
+<article class="article page-width">
+  <header class="article__header center">
+    <h1>{{ article.title | escape }}</h1>
+    {%- if section.settings.show_date -%}
+      <span class="article__date">{{ article.published_at | time_tag: format: 'date' }}</span>
+    {%- endif -%}
+    {%- if section.settings.show_author -%}
+      <span class="article__author">{{ article.author }}</span>
+    {%- endif -%}
+  </header>
+
+  {%- if section.settings.show_image and article.image -%}
+    <div class="article__image">
+      <img src="{{ article.image | image_url: width: 1200 }}"
+           alt="{{ article.image.alt | escape }}"
+           width="1200"
+           height="{{ 1200 | divided_by: article.image.aspect_ratio | ceil }}"
+           loading="eager">
+    </div>
+  {%- endif -%}
+
+  <div class="article__content rte">
+    {{ article.content }}
+  </div>
+
+  <div class="article__back center">
+    <a href="{{ blog.url }}" class="button button--secondary">Back to {{ blog.title }}</a>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "Show featured image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": true,
+      "label": "Show author"
+    }
+  ]
+}
+{% endschema %}

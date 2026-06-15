@@ -1,0 +1,80 @@
+<div class="image-gallery page-width">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="center">{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+
+  <div class="grid grid--{{ section.settings.columns }}-col">
+    {%- for block in section.blocks -%}
+      <div class="grid__item gallery-item" {{ block.shopify_attributes }}>
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}">
+        {%- endif -%}
+        
+        {%- if block.settings.image != blank -%}
+          <img src="{{ block.settings.image | image_url: width: 800 }}"
+               alt="{{ block.settings.image.alt | escape }}"
+               width="800"
+               height="{{ 800 | divided_by: block.settings.image.aspect_ratio | ceil }}"
+               loading="lazy">
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+
+        {%- if block.settings.link != blank -%}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image Gallery",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Gallery",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "label": "Columns"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Gallery",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

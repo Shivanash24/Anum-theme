@@ -1,0 +1,235 @@
+<style>
+  .ps-section {
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    overflow: hidden;
+  }
+
+  .ps-track {
+    display: flex;
+    height: 100%;
+  }
+
+  .ps-slide {
+    flex: 0 0 100%;
+    position: relative;
+    height: 100%;
+  }
+
+  .ps-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ps-slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 60%);
+  }
+
+  .ps-slide__content {
+    position: absolute;
+    bottom: 3.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    text-align: center;
+  }
+
+  .ps-slide__btn {
+    display: inline-block;
+    padding: 0.75rem 2.5rem;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    background: transparent;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: background 0.3s ease, color 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .ps-slide__btn:hover {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  /* Dots */
+  .ps-dots {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .ps-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.45);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s, transform 0.3s;
+  }
+
+  .ps-dot.active {
+    background: #ffffff;
+    transform: scale(1.35);
+  }
+
+  /* Arrow buttons */
+  .ps-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #ffffff;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.3s;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .ps-arrow:hover { background: rgba(255,255,255,0.35); }
+  .ps-arrow--prev { left: 1.5rem; }
+  .ps-arrow--next { right: 1.5rem; }
+</style>
+
+{%- assign slide_defaults = 'slider_watch_1.jpg,slider_watch_2.jpg,slider_watch_3.jpg' | split: ',' -%}
+
+<div class="ps-section" id="ps-{{ section.id }}">
+  <div class="ps-track" id="ps-track-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign img_index = forloop.index0 | modulo: 3 -%}
+      <div class="ps-slide" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <img src="{{ block.settings.image | image_url: width: 1400 }}"
+               alt="{{ block.settings.image.alt | default: 'Luxury Watch Collection' | escape }}"
+               width="1400"
+               height="{{ 1400 | divided_by: block.settings.image.aspect_ratio | ceil }}"
+               {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+        {%- else -%}
+          <img src="{{ slide_defaults[img_index] | asset_url }}"
+               alt="Luxury Watch Collection"
+               width="1200" height="800"
+               {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+        {%- endif -%}
+
+        <div class="ps-slide__content">
+          {%- if block.settings.button_label != blank -%}
+            <a href="{{ block.settings.button_link | default: '#' }}" class="ps-slide__btn">{{ block.settings.button_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <button class="ps-arrow ps-arrow--prev" id="ps-prev-{{ section.id }}" aria-label="Previous slide">&#8592;</button>
+  <button class="ps-arrow ps-arrow--next" id="ps-next-{{ section.id }}" aria-label="Next slide">&#8594;</button>
+
+  <div class="ps-dots" id="ps-dots-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      <button class="ps-dot {% if forloop.first %}active{% endif %}" data-idx="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+(function() {
+  var id = '{{ section.id }}';
+  var section = document.getElementById('ps-' + id);
+  if (!section) return;
+
+  var track   = document.getElementById('ps-track-' + id);
+  var slides  = track.querySelectorAll('.ps-slide');
+  var dots    = document.querySelectorAll('#ps-dots-' + id + ' .ps-dot');
+  var prevBtn = document.getElementById('ps-prev-' + id);
+  var nextBtn = document.getElementById('ps-next-' + id);
+  var total   = slides.length;
+  var current = 0;
+  var timer;
+
+  function goTo(idx) {
+    if (idx < 0) idx = total - 1;
+    if (idx >= total) idx = 0;
+    track.style.transition = 'transform 0.75s cubic-bezier(0.65,0,0.35,1)';
+    track.style.transform  = 'translateX(-' + (idx * 100) + '%)';
+    dots.forEach(function(d){ d.classList.remove('active'); });
+    if (dots[idx]) dots[idx].classList.add('active');
+    current = idx;
+  }
+
+  function startTimer() {
+    clearInterval(timer);
+    timer = setInterval(function(){ goTo(current + 1); }, 5000);
+  }
+
+  prevBtn.addEventListener('click', function(){ goTo(current - 1); startTimer(); });
+  nextBtn.addEventListener('click', function(){ goTo(current + 1); startTimer(); });
+  dots.forEach(function(dot){
+    dot.addEventListener('click', function(){ goTo(parseInt(this.dataset.idx)); startTimer(); });
+  });
+
+  startTimer();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Premium Image Slider",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Image Slider",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

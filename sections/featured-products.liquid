@@ -1,0 +1,61 @@
+<div class="featured-products">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="featured-products__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <div class="featured-products__slider">
+      {%- for block in section.blocks -%}
+        {%- assign product = block.settings.product -%}
+        <div class="featured-products__slide" {{ block.shopify_attributes }}>
+          {%- if product != blank -%}
+            {% render 'product-card', product: product %}
+          {%- else -%}
+            <div class="product-card">
+              {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+              <h3>Example Product</h3>
+              <span>$5,000.00</span>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Curated Selection",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,76 @@
+<div class="press-mentions page-width center">
+  {%- if section.settings.heading != blank -%}
+    <h2>{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+
+  <div class="press-mentions__grid grid grid--{{ section.settings.columns }}-col">
+    {%- for block in section.blocks -%}
+      <div class="grid__item press-card" {{ block.shopify_attributes }}>
+        {%- if block.settings.logo != blank -%}
+          <div class="press-card__logo">
+            <img src="{{ block.settings.logo | image_url: width: 200 }}"
+                 alt="{{ block.settings.logo.alt | escape }}"
+                 width="200"
+                 height="{{ 200 | divided_by: block.settings.logo.aspect_ratio | ceil }}"
+                 loading="lazy">
+          </div>
+        {%- endif -%}
+        <blockquote class="press-card__quote">
+          "{{ block.settings.quote }}"
+        </blockquote>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Press Mentions",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "As Featured In",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3,
+      "label": "Columns"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "press",
+      "name": "Press Mention",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Publication Logo"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "default": "A masterpiece of modern horology.",
+          "label": "Quote"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Press Mentions",
+      "blocks": [
+        { "type": "press" },
+        { "type": "press" },
+        { "type": "press" }
+      ]
+    }
+  ]
+}
+{% endschema %}

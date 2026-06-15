@@ -1,0 +1,25 @@
+{%- if predictive_search.performed -%}
+  <div id="predictive-search-results">
+    {%- if predictive_search.resources.products.size > 0 -%}
+      <h3 id="predictive-search-products" class="predictive-search__heading">Products</h3>
+      <ul role="listbox" class="predictive-search__results-list" aria-labelledby="predictive-search-products">
+        {%- for product in predictive_search.resources.products -%}
+          <li id="predictive-search-option-{{ forloop.index }}" class="predictive-search__list-item" role="option">
+            <a href="{{ product.url }}" class="predictive-search__item" tabindex="-1">
+              {%- if product.featured_media != blank -%}
+                <img class="predictive-search__image" src="{{ product.featured_media | image_url: width: 50 }}" alt="{{ product.featured_media.alt }}" width="50" height="50" loading="lazy">
+              {%- endif -%}
+              <div class="predictive-search__item-content">
+                <span class="predictive-search__item-heading">{{ product.title }}</span>
+                {% render 'price', product: product %}
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    <button class="predictive-search__item--term button button--tertiary" tabindex="-1">
+      Search for “{{ predictive_search.terms }}”
+    </button>
+  </div>
+{%- endif -%}

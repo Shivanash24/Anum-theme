@@ -1,0 +1,150 @@
+<style>
+  .product-card {
+    position: relative;
+    display: block;
+    background: var(--color-background);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    overflow: hidden;
+  }
+
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Image container with fixed height */
+  .product-card__image-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 320px;
+    background: #f5f5f3;
+  }
+
+  .product-card__image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: block;
+  }
+
+  .product-card:hover .product-card__image-wrapper img {
+    transform: scale(1.06);
+  }
+
+  /* Quick view overlay on hover */
+  .product-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .product-card:hover .product-card__overlay {
+    opacity: 1;
+  }
+
+  .product-card__overlay-text {
+    color: #fff;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.8);
+    padding: 0.75rem 1.75rem;
+    transition: background 0.3s ease;
+  }
+
+  .product-card__overlay-text:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  /* Badge */
+  .product-card__badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background-color: var(--color-accent, #c9a84c);
+    color: #ffffff;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    padding: 0.35rem 0.9rem;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  /* Info section below image */
+  .product-card__info {
+    padding: 1.25rem 0.25rem 1.5rem;
+    text-align: left;
+    border-top: 1px solid var(--color-border, #e8e8e8);
+  }
+
+  .product-card__title {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    margin: 0 0 0.6rem;
+    line-height: 1.4;
+  }
+
+  .product-card .price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--color-foreground);
+    opacity: 0.85;
+  }
+
+  .product-card .price s,
+  .product-card .price__sale {
+    font-size: 0.95rem;
+    opacity: 0.5;
+    text-decoration: line-through;
+    margin-right: 0.5rem;
+  }
+
+  /* Grid spacing fix */
+  .grid--3-col .grid__item {
+    padding: 0;
+  }
+</style>
+
+<div class="product-card">
+  <a href="{{ product.url | within: collection }}" class="product-card__link" style="text-decoration: none; color: inherit;">
+    <div class="product-card__image-wrapper">
+      {%- if product.featured_media -%}
+        <img src="{{ product.featured_media | image_url: width: 700 }}"
+             alt="{{ product.featured_media.alt | escape }}"
+             loading="lazy"
+             width="700"
+             height="{{ 700 | divided_by: product.featured_media.aspect_ratio | ceil }}">
+      {%- else -%}
+        <img src="{{ 'catalog_banner_watch.jpg' | asset_url }}" alt="{{ product.title | escape }}" width="700" height="700" loading="lazy">
+      {%- endif -%}
+
+      {%- if product.tags contains 'New' -%}
+        <span class="product-card__badge">New</span>
+      {%- endif -%}
+
+      <div class="product-card__overlay">
+        <span class="product-card__overlay-text">View Details</span>
+      </div>
+    </div>
+
+    <div class="product-card__info">
+      <h3 class="product-card__title">{{ product.title }}</h3>
+      {% render 'price', product: product %}
+    </div>
+  </a>
+</div>

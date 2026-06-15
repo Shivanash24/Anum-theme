@@ -1,0 +1,120 @@
+<style>
+  .collection-hero {
+    position: relative;
+    width: 100%;
+    height: 55vh;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .collection-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: scale(1.02);
+    transition: transform 8s ease;
+  }
+
+  .collection-hero:hover .collection-hero__image {
+    transform: scale(1.0);
+  }
+
+  .collection-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%);
+    z-index: 1;
+  }
+
+  .collection-hero__content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .collection-hero__eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1rem;
+  }
+
+  .collection-hero__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #ffffff;
+    line-height: 1;
+    margin: 0 0 1.5rem;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .collection-hero__divider {
+    width: 60px;
+    height: 1px;
+    background: rgba(255,255,255,0.5);
+    margin: 0 auto;
+  }
+</style>
+
+<div class="collection-hero">
+  {%- if collection.image -%}
+    <img
+      class="collection-hero__image"
+      src="{{ collection.image | image_url: width: 2400 }}"
+      alt="{{ collection.title | escape }}"
+      width="2400"
+      height="{{ 2400 | divided_by: collection.image.aspect_ratio | ceil }}"
+      loading="eager"
+      fetchpriority="high"
+    >
+  {%- else -%}
+    <img
+      class="collection-hero__image"
+      src="{{ 'catalog_banner_watch.jpg' | asset_url }}"
+      alt="Aurum Luxury Watch Collection"
+      width="2400"
+      height="1350"
+      loading="eager"
+      fetchpriority="high"
+    >
+  {%- endif -%}
+
+  <div class="collection-hero__overlay"></div>
+
+  <div class="collection-hero__content">
+    <div class="collection-hero__divider"></div>
+  </div>
+</div>
+
+{%- if section.settings.show_description and collection.description != blank -%}
+  <div class="page-width" style="padding: 2rem; text-align: center; color: var(--color-foreground); opacity: 0.7; max-width: 700px; margin: 0 auto; font-size: 1.05rem; line-height: 1.8;">
+    {{ collection.description }}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection Banner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "default": true,
+      "label": "Show collection description"
+    }
+  ]
+}
+{% endschema %}

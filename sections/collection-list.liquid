@@ -1,0 +1,65 @@
+<div class="collection-list">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <h2 class="collection-list__title center">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+
+    <ul class="grid grid--3-col">
+      {%- for block in section.blocks -%}
+        <li class="grid__item" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.collection.url }}" class="collection-card">
+            <div class="collection-card__image">
+              {%- if block.settings.collection.image != blank -%}
+                <img src="{{ block.settings.collection.image | image_url: width: 600 }}"
+                     alt="{{ block.settings.collection.title | escape }}"
+                     width="600"
+                     height="{{ 600 | divided_by: block.settings.collection.image.aspect_ratio | ceil }}"
+                     loading="lazy">
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <h3 class="collection-card__title">{{ block.settings.collection.title | default: 'Example Collection' }}</h3>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Shop by Collection",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection List",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}

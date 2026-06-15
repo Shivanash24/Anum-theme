@@ -1,0 +1,53 @@
+<div class="cart-footer page-width" id="main-cart-footer">
+  <div class="cart-footer__inner">
+    {%- if section.settings.show_cart_note -%}
+      <div class="cart-footer__note">
+        <label for="Cart-note">Order note</label>
+        <textarea name="note" class="text-area" id="Cart-note" form="cart">{{ cart.note }}</textarea>
+      </div>
+    {%- endif -%}
+    <div class="cart-footer__blocks">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'subtotal' -%}
+            <div class="cart-footer__subtotal" {{ block.shopify_attributes }}>
+              <h2>Subtotal</h2>
+              <p class="totals__subtotal-value">{{ cart.total_price | money_with_currency }}</p>
+            </div>
+          {%- when 'buttons' -%}
+            <div class="cart-footer__buttons" {{ block.shopify_attributes }}>
+              <button type="submit" id="checkout" class="button" name="checkout" form="cart">
+                Checkout
+              </button>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart Footer",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_cart_note",
+      "default": true,
+      "label": "Enable order notes"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subtotal",
+      "name": "Subtotal",
+      "limit": 1
+    },
+    {
+      "type": "buttons",
+      "name": "Checkout Button",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}

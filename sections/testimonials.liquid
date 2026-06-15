@@ -1,0 +1,368 @@
+<style>
+  .testimonials-section {
+    padding: 7rem 0;
+    background-color: var(--color-background);
+    overflow: hidden;
+  }
+
+  .testimonials__header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .testimonials__eyebrow {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .testimonials__title {
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    margin: 0;
+  }
+
+  .testimonials__track-wrapper {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .testimonials__track {
+    display: flex;
+    transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .testimonials__card {
+    flex: 0 0 100%;
+    padding: 0 2rem;
+    box-sizing: border-box;
+  }
+
+  @media screen and (min-width: 768px) {
+    .testimonials__card {
+      flex: 0 0 50%;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .testimonials__card {
+      flex: 0 0 33.333%;
+    }
+  }
+
+  .testimonials__card-inner {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 3rem;
+    height: 100%;
+    position: relative;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .testimonials__card-inner:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  }
+
+  .testimonials__quote-icon {
+    display: block;
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--color-accent);
+    font-family: Georgia, serif;
+    margin-bottom: 1.5rem;
+    opacity: 0.6;
+  }
+
+  .testimonials__text {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--color-foreground);
+    opacity: 0.85;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  .testimonials__stars {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonials__star {
+    color: var(--color-accent);
+    font-size: 0.9rem;
+  }
+
+  .testimonials__divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonials__author-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    margin-bottom: 0.3rem;
+  }
+
+  .testimonials__author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-family: var(--font-heading-family);
+    margin-bottom: 1rem;
+  }
+
+  .testimonials__author-title {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--color-foreground);
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  /* Controls */
+  .testimonials__controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .testimonials__btn {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-foreground);
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+  }
+
+  .testimonials__btn:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border-color: var(--color-foreground);
+  }
+
+  .testimonials__dots {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .testimonials__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+
+  .testimonials__dot.active {
+    background: var(--color-accent);
+    transform: scale(1.3);
+  }
+</style>
+
+<section class="testimonials-section">
+  <div class="page-width">
+    <div class="testimonials__header reveal">
+      <span class="testimonials__eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="testimonials__title">{{ section.settings.title }}</h2>
+    </div>
+
+    <div class="testimonials__track-wrapper" id="TestimonialsWrapper-{{ section.id }}">
+      <div class="testimonials__track" id="TestimonialsTrack-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <div class="testimonials__card" {{ block.shopify_attributes }}>
+            <div class="testimonials__card-inner">
+              <span class="testimonials__quote-icon">&ldquo;</span>
+              <div class="testimonials__stars">
+                {%- for i in (1..5) -%}
+                  <span class="testimonials__star">★</span>
+                {%- endfor -%}
+              </div>
+              <p class="testimonials__text">{{ block.settings.quote }}</p>
+              <div class="testimonials__divider"></div>
+              {%- assign name_parts = block.settings.author | split: ' ' -%}
+              {%- assign initials = name_parts[0] | slice: 0 | append: name_parts[1] | slice: 0 -%}
+              <div class="testimonials__author-avatar">{{ initials | upcase }}</div>
+              <div class="testimonials__author-name">{{ block.settings.author }}</div>
+              <div class="testimonials__author-title">{{ block.settings.author_title }}</div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="testimonials__controls">
+      <button class="testimonials__btn" id="TestPrev-{{ section.id }}" aria-label="Previous">&#8592;</button>
+      <div class="testimonials__dots" id="TestDots-{{ section.id }}">
+        {%- assign visible = 1 -%}
+        {%- if section.blocks.size > 1 -%}{%- assign visible = section.blocks.size -%}{%- endif -%}
+        {%- for block in section.blocks -%}
+          <button class="testimonials__dot {% if forloop.first %}active{% endif %}" data-idx="{{ forloop.index0 }}"></button>
+        {%- endfor -%}
+      </div>
+      <button class="testimonials__btn" id="TestNext-{{ section.id }}" aria-label="Next">&#8594;</button>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var id = '{{ section.id }}';
+  var wrapper = document.getElementById('TestimonialsWrapper-' + id);
+  var track   = document.getElementById('TestimonialsTrack-' + id);
+  if (!wrapper || !track) return;
+
+  var cards  = track.querySelectorAll('.testimonials__card');
+  var dots   = document.querySelectorAll('#TestDots-' + id + ' .testimonials__dot');
+  var prev   = document.getElementById('TestPrev-' + id);
+  var next   = document.getElementById('TestNext-' + id);
+  var total  = cards.length;
+  var current = 0;
+
+  function visibleCount() {
+    var w = wrapper.offsetWidth;
+    if (w >= 1200) return 3;
+    if (w >= 768)  return 2;
+    return 1;
+  }
+
+  function maxIndex() {
+    return Math.max(0, total - visibleCount());
+  }
+
+  function goTo(idx) {
+    if (idx < 0) idx = maxIndex();
+    if (idx > maxIndex()) idx = 0;
+    var pct = (idx / total) * 100;
+    track.style.transition = 'transform 0.7s cubic-bezier(0.65,0,0.35,1)';
+    track.style.transform  = 'translateX(-' + pct + '%)';
+    dots.forEach(function(d) { d.classList.remove('active'); });
+    if (dots[idx]) dots[idx].classList.add('active');
+    current = idx;
+  }
+
+  prev.addEventListener('click', function() { goTo(current - 1); });
+  next.addEventListener('click', function() { goTo(current + 1); });
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() { goTo(parseInt(this.dataset.idx)); });
+  });
+
+  var timer = setInterval(function() { goTo(current + 1); }, 6000);
+  wrapper.addEventListener('mouseenter', function() { clearInterval(timer); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Client Stories"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Words From Our Collectors"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "An extraordinary piece of horology. The craftsmanship is unrivalled and the experience of owning it is truly transformative."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author Name",
+          "default": "James Whitfield"
+        },
+        {
+          "type": "text",
+          "id": "author_title",
+          "label": "Author Title",
+          "default": "Collector, London"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "An extraordinary piece of horology. The craftsmanship is unrivalled and the experience of owning it is truly transformative.",
+            "author": "James Whitfield",
+            "author_title": "Collector, London"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I have owned timepieces from all the great houses, but Aurum stands in a class entirely its own. A true masterpiece.",
+            "author": "Sophia Laurent",
+            "author_title": "Art Curator, Paris"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The attention to detail is breathtaking. From the movement to the delivery, every step of the journey felt like a privilege.",
+            "author": "Hiroshi Nakamura",
+            "author_title": "Entrepreneur, Tokyo"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Aurum redefined my understanding of luxury. The watch I received is not merely a timepiece — it is a work of art.",
+            "author": "Alessandro Romano",
+            "author_title": "Architect, Milan"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

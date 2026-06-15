@@ -1,0 +1,124 @@
+<style>
+  .image-with-text {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  
+  .image-with-text__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 2rem 0;
+  }
+  
+  .image-with-text__heading {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  .image-with-text__text {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: var(--color-foreground);
+    opacity: 0.8;
+  }
+  
+  @media screen and (min-width: 990px) {
+    .image-with-text {
+      padding-top: 8rem;
+      padding-bottom: 8rem;
+    }
+    
+    .image-with-text__content {
+      padding: 0 4rem;
+    }
+  }
+</style>
+
+<div class="image-with-text page-width reveal">
+  <div class="grid grid--2-col">
+    <div class="grid__item image-with-text__media-item">
+      <div class="image-with-text__media">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 1000 }}"
+               alt="{{ section.settings.image.alt | escape }}"
+               width="1000"
+               height="{{ 1000 | divided_by: section.settings.image.aspect_ratio | ceil }}"
+               loading="lazy">
+        {%- else -%}
+          <img src="{{ 'luxury_watch_lifestyle.jpg' | asset_url }}" alt="Luxury Watch Lifestyle" width="800" height="800" style="width: 100%; height: auto;" loading="lazy">
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="grid__item image-with-text__text-item">
+      <div class="image-with-text__content">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              <h2 class="image-with-text__heading" {{ block.shopify_attributes }}>{{ block.settings.heading | escape }}</h2>
+            {%- when 'text' -%}
+              <div class="image-with-text__text" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+            {%- when 'button' -%}
+              <a href="{{ block.settings.button_link }}" class="button" {{ block.shopify_attributes }}>{{ block.settings.button_label }}</a>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "default": "Image with text", "label": "Heading" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "limit": 1,
+      "settings": [
+        { "type": "richtext", "id": "text", "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post.</p>", "label": "Text" }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "button_label", "default": "Button label", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

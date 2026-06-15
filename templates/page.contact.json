@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "video-hero": {
+      "type": "video-hero",
+      "settings": {
+        "heading": "Contact Aurum"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "contact": {
+      "type": "contact-form",
+      "settings": {}
+    }
+  },
+  "order": [
+    "video-hero",
+    "main",
+    "contact"
+  ]
+}

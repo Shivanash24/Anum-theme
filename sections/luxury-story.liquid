@@ -1,0 +1,219 @@
+<style>
+  .luxury-story-section {
+    padding: 8rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .luxury-story__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .luxury-story__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  @media screen and (min-width: 990px) {
+    .luxury-story__inner {
+      flex-direction: row;
+      align-items: stretch;
+    }
+  }
+
+  .luxury-story__media-wrapper {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  }
+
+  @media screen and (min-width: 990px) {
+    .luxury-story__media-wrapper {
+      width: 60%;
+    }
+  }
+
+  .luxury-story__media-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .luxury-story__media-wrapper:hover img {
+    transform: scale(1.05);
+  }
+
+  .luxury-story__content-wrapper {
+    width: 100%;
+    padding-top: 3rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .luxury-story__content-wrapper {
+      width: 50%;
+      padding-top: 0;
+      margin-left: -10%;
+      display: flex;
+      align-items: center;
+      z-index: 2;
+    }
+  }
+
+  .luxury-story__content {
+    background: var(--color-background);
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    position: relative;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .luxury-story__content::before {
+    content: '“';
+    position: absolute;
+    top: -40px;
+    left: 20px;
+    font-size: 15rem;
+    color: var(--color-accent);
+    opacity: 0.05;
+    font-family: var(--font-heading-family);
+    line-height: 1;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @media screen and (min-width: 990px) {
+    .luxury-story__content {
+      padding: 5rem 4rem;
+    }
+  }
+
+  .luxury-story__heading {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--color-foreground);
+  }
+
+  .luxury-story__text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-foreground);
+    opacity: 0.75;
+    margin-bottom: 2.5rem;
+  }
+
+  .luxury-story__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 3rem;
+    background-color: var(--color-accent);
+    color: var(--color-button-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-accent);
+  }
+
+  .luxury-story__btn:hover {
+    background-color: transparent;
+    color: var(--color-accent);
+  }
+</style>
+
+<div class="luxury-story-section" style="background-color: {{ section.settings.bg_color }};">
+  <div class="luxury-story__container">
+    <div class="luxury-story__inner">
+      
+      <div class="luxury-story__media-wrapper">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 1200 }}"
+               alt="{{ section.settings.image.alt | escape }}"
+               width="1200"
+               height="{{ 1200 | divided_by: section.settings.image.aspect_ratio | ceil }}"
+               loading="lazy">
+        {%- else -%}
+          <img src="{{ 'luxury_watch_lifestyle.jpg' | asset_url }}" alt="Luxury Watch Story" width="1200" height="800" loading="lazy" loading="lazy">
+        {%- endif -%}
+      </div>
+      
+      <div class="luxury-story__content reveal reveal-delay-2">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="luxury-story__heading" style="position: relative; z-index: 1;">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        
+        {%- if section.settings.text != blank -%}
+          <div class="luxury-story__text" style="position: relative; z-index: 1;">
+            {{ section.settings.text }}
+          </div>
+        {%- endif -%}
+        
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="luxury-story__btn" style="position: relative; z-index: 1;">
+            {{ section.settings.button_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Luxury Story",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "A Heritage of Excellence",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Since our inception, we have pursued perfection in every timepiece...</p>",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Read our story",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#fafafa"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Story"
+    }
+  ]
+}
+{% endschema %}

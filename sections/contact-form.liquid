@@ -1,0 +1,164 @@
+<style>
+  .contact-form__wrapper {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 3rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+  }
+  
+  .contact-form__wrapper h2 {
+    font-size: 2.2rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+
+  .contact__fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .contact__fields {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .field__input, .text-area.field__input {
+    width: 100%;
+    padding: 1.2rem;
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.4); /* Darker borders */
+    color: var(--color-foreground);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    font-family: var(--font-body-family);
+  }
+  
+  .field__input:focus, .text-area.field__input:focus {
+    outline: none;
+    border-color: var(--color-foreground);
+    box-shadow: 0 0 0 1px var(--color-foreground);
+  }
+
+  .text-area.field__input {
+    min-height: 150px;
+    resize: vertical;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact__button {
+    text-align: center;
+  }
+
+  .contact__button .button {
+    width: 100%;
+    padding: 1.2rem 3rem;
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+    border: 1px solid var(--color-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .contact__button .button:hover {
+    background-color: transparent;
+    color: var(--color-foreground);
+  }
+</style>
+
+<div class="contact-form__wrapper page-width reveal">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="center">{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+
+  {%- form 'contact', id: 'ContactForm' -%}
+    {%- if form.posted_successfully? -%}
+      <div class="form-status form-status-list form__message" tabindex="-1" autofocus>
+        Success! Your message was sent.
+      </div>
+    {%- elsif form.errors -%}
+      <div class="form__message">
+        <h2 class="form-status caption-large text-body" role="alert" tabindex="-1" autofocus>Please adjust the following:</h2>
+      </div>
+      <ul class="form-status-list caption-large" role="list">
+        <li>
+          <a href="#ContactForm-email">
+            {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+          </a>
+        </li>
+      </ul>
+    {%- endif -%}
+
+    <div class="contact__fields">
+      <div class="field">
+        <input class="field__input" autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" placeholder="Name">
+      </div>
+      <div class="field field--with-error">
+        <input
+          autocomplete="email"
+          type="email"
+          id="ContactForm-email"
+          class="field__input"
+          name="contact[email]"
+          spellcheck="false"
+          autocapitalize="off"
+          value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="ContactForm-email-error"
+          {% endif %}
+          placeholder="Email"
+        >
+      </div>
+    </div>
+    <div class="field" style="margin-bottom: 1.5rem;">
+      <input type="tel" id="ContactForm-phone" class="field__input" autocomplete="tel" name="contact[phone]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="Phone Number">
+    </div>
+    <div class="field">
+      <textarea
+        rows="10"
+        id="ContactForm-body"
+        class="text-area field__input"
+        name="contact[{{ 'templates.contact.form.comment' | t }}]"
+        placeholder="Message"
+      >
+        {{- form.body -}}
+      </textarea>
+    </div>
+    <div class="contact__button">
+      <button type="submit" class="button">
+        Send
+      </button>
+    </div>
+  {%- endform -%}
+</div>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Contact us",
+      "label": "Heading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form"
+    }
+  ]
+}
+{% endschema %}

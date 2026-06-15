@@ -1,0 +1,80 @@
+<style>
+  .marquee-strip {
+    background-color: var(--color-accent);
+    overflow: hidden;
+    padding: 1.2rem 0;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .marquee-strip__track {
+    display: flex;
+    animation: strip-scroll 25s linear infinite;
+    white-space: nowrap;
+    gap: 0;
+  }
+
+  .marquee-strip__track:hover {
+    animation-play-state: paused;
+  }
+
+  .marquee-strip__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 0 3rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-button-text);
+    flex-shrink: 0;
+  }
+
+  .marquee-strip__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.35);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  @keyframes strip-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>
+
+{%- assign items = section.settings.text | split: '|' -%}
+
+<div class="marquee-strip">
+  <div class="marquee-strip__track">
+    {%- for i in (1..2) -%}
+      {%- for item in items -%}
+        <span class="marquee-strip__item">
+          {{ item | strip }}
+          <span class="marquee-strip__dot"></span>
+        </span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee Strip",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Items (separate with |)",
+      "default": "Swiss Made Excellence | Since 1949 | Handcrafted Movements | 100% Authentic | Free Returns | 5-Year Warranty | Expert Consultation | Bespoke Engraving"
+    }
+  ],
+  "presets": [
+    { "name": "Marquee Strip" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,171 @@
+<div class="product page-width">
+  <div class="grid grid--2-col">
+    <div class="grid__item product__media-wrapper">
+      {%- if product.media.size > 0 -%}
+        {%- for media in product.media -%}
+          <div class="product__media">
+            {%- if media.media_type == 'image' -%}
+              <img src="{{ media | image_url: width: 1000 }}"
+                   alt="{{ media.alt | escape }}"
+                   width="1000"
+                   height="{{ 1000 | divided_by: media.aspect_ratio | ceil }}"
+                   loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                   style="width: 100%; height: auto;">
+            {%- else -%}
+              {{ media | media_tag }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="product__media">
+          <img src="{{ 'luxury_watch_product.jpg' | asset_url }}" alt="Luxury Watch Placeholder" width="800" height="800" style="width: 100%; height: auto;" loading="lazy">
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="grid__item product__info-wrapper">
+      <div class="product__info">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+            {%- when 'title' -%}
+              <h1 class="product__title" {{ block.shopify_attributes }}>{{ product.title | escape }}</h1>
+            {%- when 'price' -%}
+              <div class="product__price" {{ block.shopify_attributes }}>
+                {% render 'price', product: product %}
+              </div>
+            {%- when 'description' -%}
+              <div class="product__description rte" {{ block.shopify_attributes }}>
+                {{ product.description }}
+              </div>
+            {%- when 'variant_picker' -%}
+              {%- unless product.has_only_default_variant -%}
+                <div class="product__variant-picker" {{ block.shopify_attributes }}>
+                  {%- for option in product.options_with_values -%}
+                    <fieldset class="product-form__input">
+                      <legend class="form__label">{{ option.name }}</legend>
+                      {%- for value in option.values -%}
+                        <input type="radio" id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                               name="{{ option.name }}"
+                               value="{{ value | escape }}"
+                               {% if option.selected_value == value %}checked{% endif %}>
+                        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+                          {{ value }}
+                        </label>
+                      {%- endfor -%}
+                    </fieldset>
+                  {%- endfor -%}
+                </div>
+              {%- endunless -%}
+            {%- when 'buy_buttons' -%}
+              <div class="product__buy-buttons" {{ block.shopify_attributes }}>
+                {%- form 'product', product -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  <button type="submit" name="add" class="button button--primary"
+                    {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+                    {%- if product.selected_or_first_available_variant.available -%}
+                      Add to cart
+                    {%- else -%}
+                      Sold out
+                    {%- endif -%}
+                  </button>
+                  {%- if block.settings.show_dynamic_checkout -%}
+                    {{ form | payment_button }}
+                  {%- endif -%}
+                {%- endform -%}
+              </div>
+            {%- when 'specifications' -%}
+              <div class="product__specifications" {{ block.shopify_attributes }}>
+                <h3>Specifications</h3>
+                <ul class="specs-list">
+                  {%- if block.settings.movement != blank -%}<li><strong>Movement:</strong> {{ block.settings.movement }}</li>{%- endif -%}
+                  {%- if block.settings.case_material != blank -%}<li><strong>Case Material:</strong> {{ block.settings.case_material }}</li>{%- endif -%}
+                  {%- if block.settings.water_resistance != blank -%}<li><strong>Water Resistance:</strong> {{ block.settings.water_resistance }}</li>{%- endif -%}
+                  {%- if block.settings.case_size != blank -%}<li><strong>Case Size:</strong> {{ block.settings.case_size }}</li>{%- endif -%}
+                  {%- if block.settings.power_reserve != blank -%}<li><strong>Power Reserve:</strong> {{ block.settings.power_reserve }}</li>{%- endif -%}
+                  {%- if block.settings.crystal_type != blank -%}<li><strong>Crystal:</strong> {{ block.settings.crystal_type }}</li>{%- endif -%}
+                  {%- if block.settings.strap_type != blank -%}<li><strong>Strap:</strong> {{ block.settings.strap_type }}</li>{%- endif -%}
+                </ul>
+              </div>
+            {%- when 'warranty' -%}
+              <div class="product__warranty" {{ block.shopify_attributes }}>
+                {% render 'icon-close' %} <!-- Using placeholder icon -->
+                <span>{{ block.settings.text }}</span>
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Information",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant Picker",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "default": true,
+          "label": "Show dynamic checkout buttons"
+        }
+      ]
+    },
+    {
+      "type": "specifications",
+      "name": "Watch Specifications",
+      "settings": [
+        { "type": "text", "id": "movement", "label": "Movement" },
+        { "type": "text", "id": "case_material", "label": "Case Material" },
+        { "type": "text", "id": "water_resistance", "label": "Water Resistance" },
+        { "type": "text", "id": "case_size", "label": "Case Size" },
+        { "type": "text", "id": "power_reserve", "label": "Power Reserve" },
+        { "type": "text", "id": "crystal_type", "label": "Crystal Type" },
+        { "type": "text", "id": "strap_type", "label": "Strap Type" }
+      ]
+    },
+    {
+      "type": "warranty",
+      "name": "Warranty Info",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "5-Year International Warranty",
+          "label": "Text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
