@@ -1,0 +1,77 @@
+<style>
+  .related-products {
+    padding: 5rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-top: 1px solid var(--color-border);
+  }
+  .related-products__heading {
+    text-align: center;
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 4rem;
+    font-weight: 300;
+  }
+  .grid--4-col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  @media screen and (max-width: 989px) {
+    .grid--4-col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media screen and (max-width: 599px) {
+    .grid--4-col {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="related-products">
+  <h2 class="related-products__heading">{{ section.settings.heading }}</h2>
+  <div class="grid grid--4-col">
+    {%- assign current_product = product -%}
+    {%- assign related_collection = current_product.collections.first -%}
+    {%- if related_collection -%}
+      {%- assign count = 0 -%}
+      {%- for related_product in related_collection.products -%}
+        {%- if related_product.id != current_product.id and count < section.settings.products_to_show -%}
+          <div class="grid__item">
+            {% render 'product-card', product: related_product %}
+          </div>
+          {%- assign count = count | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "You May Also Like",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "Maximum products to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ]
+}
+{% endschema %}

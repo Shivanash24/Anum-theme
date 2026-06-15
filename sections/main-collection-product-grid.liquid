@@ -109,6 +109,33 @@
                 {%- endfor -%}
               </select>
             </div>
+          {%- elsif filter.type == 'price_range' -%}
+            <div class="collection-toolbar__filter collection-toolbar__filter--price">
+              <span class="label">Price:</span>
+              <div class="price-range-inputs">
+                <span style="font-size: 0.85rem; opacity: 0.7;">From</span>
+                <input
+                  type="number"
+                  name="{{ filter.min_value.param_name }}"
+                  id="Filter-{{ filter.label | handleize }}-GTE"
+                  class="premium-select"
+                  style="width: 80px; padding: 0.5rem;"
+                  {% if filter.min_value.value %}value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                  placeholder="{{ filter.range_min | money_without_currency }}"
+                >
+                <span style="font-size: 0.85rem; opacity: 0.7;">To</span>
+                <input
+                  type="number"
+                  name="{{ filter.max_value.param_name }}"
+                  id="Filter-{{ filter.label | handleize }}-LTE"
+                  class="premium-select"
+                  style="width: 80px; padding: 0.5rem;"
+                  {% if filter.max_value.value %}value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                  placeholder="{{ filter.range_max | money_without_currency }}"
+                >
+                <button type="submit" class="premium-select" style="cursor: pointer; padding: 0.5rem 1rem;">Go</button>
+              </div>
+            </div>
           {%- endif -%}
         {%- endfor -%}
       {%- endif -%}

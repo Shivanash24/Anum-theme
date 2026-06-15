@@ -1,0 +1,67 @@
+<style>
+  .pickup-availability {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .pickup-availability-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+  .pickup-availability-list__item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .pickup-availability-list__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 0.2rem;
+  }
+  .pickup-availability-list__info {
+    flex-grow: 1;
+  }
+  .pickup-availability-list__location {
+    font-family: var(--font-heading-family);
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.25rem;
+    text-transform: uppercase;
+  }
+  .pickup-availability-list__status {
+    font-size: 0.85rem;
+    color: var(--color-foreground);
+    opacity: 0.8;
+    margin: 0;
+  }
+</style>
+
+<div class="pickup-availability">
+  <h3 style="font-family: 'Jost', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem;">Pickup Availability</h3>
+  <ul class="pickup-availability-list">
+    {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities | where: 'pick_up_enabled', true -%}
+    {%- for availability in pick_up_availabilities -%}
+      <li class="pickup-availability-list__item">
+        <svg class="pickup-availability-list__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          {%- if availability.available -%}
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+          {%- else -%}
+            <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/>
+          {%- endif -%}
+        </svg>
+        <div class="pickup-availability-list__info">
+          <p class="pickup-availability-list__location">{{ availability.location.name }}</p>
+          <p class="pickup-availability-list__status">
+            {%- if availability.available -%}
+              Available for pickup, {{ availability.pick_up_time }}
+            {%- else -%}
+              Currently unavailable for pickup
+            {%- endif -%}
+          </p>
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>

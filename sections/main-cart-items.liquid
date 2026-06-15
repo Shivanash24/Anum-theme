@@ -39,6 +39,12 @@
                         </div>
                       {%- endfor -%}
                     {%- endif -%}
+                    {%- if item.selling_plan_allocation != nil -%}
+                      <div class="product-option">
+                        <dt>Subscription: </dt>
+                        <dd style="color: var(--color-accent);">{{ item.selling_plan_allocation.selling_plan.name }}</dd>
+                      </div>
+                    {%- endif -%}
                   </dl>
                 {%- endif -%}
                 <div class="cart-item__price-wrapper">

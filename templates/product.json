@@ -20,6 +20,9 @@
         },
         "specs": {
           "type": "specifications"
+        },
+        "complementary": {
+          "type": "complementary"
         }
       },
       "block_order": [
@@ -28,12 +31,18 @@
         "variant_picker",
         "buy_buttons",
         "description",
-        "specs"
+        "specs",
+        "complementary"
       ],
+      "settings": {}
+    },
+    "related-products": {
+      "type": "related-products",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "related-products"
   ]
 }

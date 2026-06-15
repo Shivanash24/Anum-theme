@@ -1,0 +1,74 @@
+<style>
+  .localization-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  .localization-form__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .localization-form__item label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #aaaaaa;
+  }
+  .localization-form__select {
+    font-family: var(--font-body-family);
+    font-size: 0.9rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .localization-form__select:focus {
+    outline: none;
+    border-color: var(--color-accent, #c9a84c);
+  }
+  .localization-form__select option {
+    background-color: #0a0a0a;
+    color: #ffffff;
+  }
+</style>
+
+<div class="localization-wrapper">
+  {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
+    {%- if localization.available_languages.size > 1 -%}
+      <div class="localization-form__item">
+        <label for="LanguageList">Language</label>
+        <select name="locale_code" id="LanguageList" class="localization-form__select" onchange="this.form.submit()">
+          {%- for language in localization.available_languages -%}
+            <option value="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}selected{% endif %}>
+              {{ language.endonym_name | capitalize }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
+
+    {%- if localization.available_countries.size > 1 -%}
+      <div class="localization-form__item">
+        <label for="CountryList">Country/region</label>
+        <select name="country_code" id="CountryList" class="localization-form__select" onchange="this.form.submit()">
+          {%- for country in localization.available_countries -%}
+            <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+              {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+</div>

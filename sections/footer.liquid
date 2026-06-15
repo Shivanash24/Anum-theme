@@ -286,6 +286,10 @@
       </ul>
     {%- endif -%}
 
+    <div class="footer__localization" style="margin-bottom: 1.5rem;">
+      {% render 'localization' %}
+    </div>
+
     <div class="footer__copyright">
       &copy; {{ 'now' | date: "%Y" }}, {{ shop.name }}. All rights reserved. Designed for excellence.
     </div>
