@@ -192,16 +192,40 @@
           
           {%- when 'link_list' -%}
             <ul class="footer__list">
-              {%- if block.settings.menu != blank -%}
-                {%- for link in linklists[block.settings.menu].links -%}
+              {%- assign menu_handle = block.settings.menu -%}
+              {%- assign has_valid_links = false -%}
+              
+              {%- if menu_handle != blank and linklists[menu_handle].links.size > 0 -%}
+                {%- if linklists[menu_handle].links.size == 1 and linklists[menu_handle].links.first.title == 'Search' -%}
+                  {%- assign has_valid_links = false -%}
+                {%- else -%}
+                  {%- assign has_valid_links = true -%}
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- if has_valid_links -%}
+                {%- for link in linklists[menu_handle].links -%}
                   <li><a href="{{ link.url }}">{{ link.title }}</a></li>
                 {%- endfor -%}
               {%- else -%}
-                <li><a href="/">Home</a></li>
-                <li><a href="/collections/all">Collections</a></li>
-                <li><a href="/pages/about">Our Story</a></li>
-                <li><a href="/pages/contact">Boutique Locations</a></li>
-                <li><a href="/blogs/news">Journal</a></li>
+                {%- if block.settings.heading == 'Explore' -%}
+                  <li><a href="/collections/all">All Collections</a></li>
+                  <li><a href="/collections/new-arrivals">New Arrivals</a></li>
+                  <li><a href="/pages/about">Our Heritage</a></li>
+                  <li><a href="/pages/craftsmanship">Craftsmanship</a></li>
+                  <li><a href="/blogs/news">The Journal</a></li>
+                {%- elsif block.settings.heading == 'Support' -%}
+                  <li><a href="/pages/contact">Contact Us</a></li>
+                  <li><a href="/pages/faq">FAQ</a></li>
+                  <li><a href="/pages/shipping">Shipping & Returns</a></li>
+                  <li><a href="/pages/care">Watch Care</a></li>
+                  <li><a href="/pages/warranty">Warranty Information</a></li>
+                {%- else -%}
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/collections/all">Shop</a></li>
+                  <li><a href="/pages/about">About Us</a></li>
+                  <li><a href="/pages/contact">Contact</a></li>
+                {%- endif -%}
               {%- endif -%}
             </ul>
           
