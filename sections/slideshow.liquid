@@ -3,13 +3,21 @@
     <div class="slideshow__slide" {{ block.shopify_attributes }}>
       <div class="slideshow__media">
         {%- if block.settings.image != blank -%}
-          <img src="{{ block.settings.image | image_url: width: 2000 }}"
-               alt="{{ block.settings.image.alt | escape }}"
-               width="2000"
-               height="{{ 2000 | divided_by: block.settings.image.aspect_ratio | ceil }}"
-               loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+          <img
+            src="{{ block.settings.image | image_url: width: 1500 }}"
+            srcset="
+              {{ block.settings.image | image_url: width: 375 }} 375w,
+              {{ block.settings.image | image_url: width: 750 }} 750w,
+              {{ block.settings.image | image_url: width: 1100 }} 1100w,
+              {{ block.settings.image | image_url: width: 1500 }} 1500w,
+              {{ block.settings.image | image_url: width: 2000 }} 2000w"
+            sizes="100vw"
+            alt="{{ block.settings.image.alt | escape | default: shop.name }}"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
+            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
         {%- else -%}
-          <img src="{{ 'luxury_watch_lifestyle.jpg' | asset_url }}" alt="Slideshow Image" width="2000" height="1000" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+          <img src="{{ 'luxury_watch_lifestyle.jpg' | asset_url }}" alt="{{ shop.name }} — Luxury Watch" width="2000" height="1000" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
         {%- endif -%}
       </div>
       <div class="slideshow__content center">

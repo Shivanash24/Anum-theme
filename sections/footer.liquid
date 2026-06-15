@@ -290,6 +290,12 @@
       {% render 'localization' %}
     </div>
 
+    {%- if section.settings.show_follow_on_shop -%}
+      <div class="footer__follow-shop" style="margin-bottom: 1.5rem;">
+        {{ shop | login_button: action: 'follow' }}
+      </div>
+    {%- endif -%}
+
     <div class="footer__copyright">
       &copy; {{ 'now' | date: "%Y" }}, {{ shop.name }}. All rights reserved. Designed for excellence.
     </div>
@@ -308,6 +314,12 @@
       "type": "checkbox",
       "id": "show_social",
       "label": "Show social media icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_follow_on_shop",
+      "label": "Show Follow on Shop button",
       "default": true
     },
     {
