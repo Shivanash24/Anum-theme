@@ -221,13 +221,156 @@
   }
 
   .mobile-menu-drawer__links li a {
-    font-family: 'Cormorant Garant', serif;
+    font-family: 'Cormorant Garamond', serif;
     font-size: 1.8rem;
     font-weight: 300;
     color: var(--color-foreground);
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+  }
+
+  /* Desktop Dropdowns & Multi-level Menu */
+  .header__menu-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .icon-caret, .icon-caret-right {
+    transition: transform 0.3s ease;
+  }
+
+  .header__menu-item:hover .icon-caret {
+    transform: rotate(180deg);
+  }
+
+  .header__dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 1rem 0;
+    min-width: 220px;
+    list-style: none;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    box-shadow: var(--shadow-luxury);
+    z-index: 100;
+    text-align: left;
+  }
+
+  .header__menu-item:hover > .header__dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .header__dropdown-menu a {
+    display: block !important;
+    padding: 0.6rem 1.5rem !important;
+    font-family: 'Jost', sans-serif !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.15em !important;
+    color: var(--color-foreground) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease, background-color 0.3s ease !important;
+  }
+
+  .header__dropdown-menu a:hover {
+    color: var(--color-accent) !important;
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  .header__dropdown-item {
+    position: relative;
+  }
+
+  .header__dropdown-link {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .dropdown-level-2 {
+    top: 0;
+    left: 100%;
+    transform: translateX(10px);
+  }
+
+  .header__dropdown-item:hover > .dropdown-level-2 {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .header__dropdown-item:hover > .header__dropdown-link .icon-caret-right {
+    transform: translateX(3px);
+    color: var(--color-accent);
+  }
+
+  /* Mobile Drawer Accordions */
+  .mobile-menu-drawer__toggle-btn,
+  .mobile-menu-drawer__toggle-btn-sub {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--color-foreground);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem 0;
+  }
+
+  .mobile-menu-drawer__toggle-btn {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .mobile-menu-drawer__toggle-btn-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-left: 0.5rem;
+  }
+
+  .mobile-menu-drawer__submenu a,
+  .mobile-menu-drawer__grandchildmenu a {
+    display: block;
+    text-decoration: none;
+    color: var(--color-foreground);
+    padding: 0.5rem 0;
+  }
+
+  .mobile-menu-drawer__submenu a {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-left: 0.5rem;
+  }
+
+  .mobile-menu-drawer__grandchildmenu a {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    padding-left: 1.5rem;
+    text-transform: none;
+    opacity: 0.8;
   }
 
   @media screen and (min-width: 990px) {
@@ -260,7 +403,39 @@
     <nav class="header__navigation" aria-label="Main navigation">
       <ul class="header__menu">
         {%- for link in section.settings.menu.links -%}
-          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- if link.links != blank -%}
+            <li class="header__menu-item has-dropdown">
+              <a href="{{ link.url }}" class="header__menu-link" aria-expanded="false" aria-haspopup="true">
+                {{ link.title }}
+                <svg class="icon-caret" viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+              </a>
+              <ul class="header__dropdown-menu dropdown-level-1">
+                {%- for child_link in link.links -%}
+                  {%- if child_link.links != blank -%}
+                    <li class="header__dropdown-item has-dropdown-sub">
+                      <a href="{{ child_link.url }}" class="header__dropdown-link" aria-expanded="false" aria-haspopup="true">
+                        {{ child_link.title }}
+                        <svg class="icon-caret-right" viewBox="0 0 6 10" width="6" height="10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4-4 4"/></svg>
+                      </a>
+                      <ul class="header__dropdown-menu dropdown-level-2">
+                        {%- for grandchild_link in child_link.links -%}
+                          <li>
+                            <a href="{{ grandchild_link.url }}" class="header__dropdown-link">{{ grandchild_link.title }}</a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </li>
+                  {%- else -%}
+                    <li>
+                      <a href="{{ child_link.url }}" class="header__dropdown-link">{{ child_link.title }}</a>
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            </li>
+          {%- else -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endif -%}
         {%- endfor -%}
         <li><a href="/pages/about-us">About</a></li>
       </ul>
@@ -299,7 +474,40 @@
   </div>
   <ul class="mobile-menu-drawer__links">
     {%- for link in section.settings.menu.links -%}
-      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {%- if link.links != blank -%}
+        {%- assign parent_index = forloop.index -%}
+        <li class="mobile-menu-drawer__item">
+          <button class="mobile-menu-drawer__toggle-btn" aria-expanded="false" aria-controls="Submenu-{{ parent_index }}">
+            {{ link.title }}
+            <svg class="icon-caret" viewBox="0 0 10 6" width="14" height="8" fill="none" stroke="currentColor" stroke-width="1.5" style="transition: transform 0.3s ease;"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <ul class="mobile-menu-drawer__submenu" id="Submenu-{{ parent_index }}" style="list-style: none; padding-left: 1.5rem; display: none; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            {%- for child_link in link.links -%}
+              {%- if child_link.links != blank -%}
+                <li class="mobile-menu-drawer__sub-item">
+                  <button class="mobile-menu-drawer__toggle-btn-sub" aria-expanded="false" aria-controls="Submenu-{{ parent_index }}-{{ forloop.index }}">
+                    {{ child_link.title }}
+                    <svg class="icon-caret" viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor" stroke-width="1.5" style="transition: transform 0.3s ease;"><path d="M1 1l4 4 4-4"/></svg>
+                  </button>
+                  <ul class="mobile-menu-drawer__grandchildmenu" id="Submenu-{{ parent_index }}-{{ forloop.index }}" style="list-style: none; padding-left: 1rem; display: none; margin-top: 0.25rem;">
+                    {%- for grandchild_link in child_link.links -%}
+                      <li>
+                        <a href="{{ grandchild_link.url }}">{{ grandchild_link.title }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </li>
+              {%- else -%}
+                <li>
+                  <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </li>
+      {%- else -%}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {%- endif -%}
     {%- endfor -%}
     <li><a href="/pages/about-us">About</a></li>
   </ul>
@@ -332,6 +540,25 @@
       menuToggle.addEventListener('click', openMenu);
       menuClose.addEventListener('click', closeMenu);
       mobileOverlay.addEventListener('click', closeMenu);
+
+      // Expand/collapse mobile menus
+      const submenuToggles = document.querySelectorAll('.mobile-menu-drawer__toggle-btn, .mobile-menu-drawer__toggle-btn-sub');
+      submenuToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', !expanded);
+          
+          const submenu = toggle.nextElementSibling;
+          if (submenu) {
+            submenu.style.display = expanded ? 'none' : 'block';
+          }
+          
+          const caret = toggle.querySelector('.icon-caret');
+          if (caret) {
+            caret.style.transform = expanded ? '' : 'rotate(180deg)';
+          }
+        });
+      });
 
       // Accessibility: Escape key closes menu
       document.addEventListener('keydown', (e) => {
