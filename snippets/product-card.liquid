@@ -133,9 +133,12 @@
         <img src="{{ 'catalog_banner_watch.jpg' | asset_url }}" alt="{{ product.title | escape }}" width="700" height="700" loading="lazy">
       {%- endif -%}
 
-      {%- if product.tags contains 'New' -%}
+      {%- if product.compare_at_price > product.price -%}
+        <span class="product-card__badge" style="background-color: #d11a2a; color: #ffffff;">Sale</span>
+      {%- elsif product.tags contains 'New' -%}
         <span class="product-card__badge">New</span>
       {%- endif -%}
+
 
       <div class="product-card__overlay">
         <span class="product-card__overlay-text">View Details</span>
