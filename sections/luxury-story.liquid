@@ -162,7 +162,7 @@
         {%- endif -%}
         
         {%- if section.settings.button_label != blank -%}
-          <a href="{{ section.settings.button_link | default: '#' }}" class="luxury-story__btn" style="position: relative; z-index: 1;">
+          <a href="{{ section.settings.button_link | default: '/pages/about-us' }}" class="luxury-story__btn" style="position: relative; z-index: 1;">
             {{ section.settings.button_label | escape }}
           </a>
         {%- endif -%}

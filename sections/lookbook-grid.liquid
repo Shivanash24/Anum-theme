@@ -109,7 +109,7 @@
         {%- liquid
           assign target_image = block.settings.image
           assign target_title = block.settings.title
-          assign target_link = block.settings.link | default: '#'
+          assign target_link = block.settings.link | default: '/collections/all'
           
           if block.settings.product != blank
             assign target_image = target_image | default: block.settings.product.featured_image

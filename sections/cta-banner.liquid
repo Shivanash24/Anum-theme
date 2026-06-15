@@ -189,12 +189,12 @@
 
     <div class="cta-banner__buttons">
       {%- if section.settings.btn_primary_label != blank -%}
-        <a href="{{ section.settings.btn_primary_link | default: '#' }}" class="cta-banner__btn-primary">
+        <a href="{{ section.settings.btn_primary_link | default: '/collections/all' }}" class="cta-banner__btn-primary">
           {{ section.settings.btn_primary_label }}
         </a>
       {%- endif -%}
       {%- if section.settings.btn_secondary_label != blank -%}
-        <a href="{{ section.settings.btn_secondary_link | default: '#' }}" class="cta-banner__btn-secondary">
+        <a href="{{ section.settings.btn_secondary_link | default: '/pages/about-us' }}" class="cta-banner__btn-secondary">
           {{ section.settings.btn_secondary_label }}
         </a>
       {%- endif -%}

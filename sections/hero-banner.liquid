@@ -153,7 +153,7 @@
           {%- when 'buttons' -%}
           <div class="hero__buttons buttons-group" {{ block.shopify_attributes }}>
             {%- if block.settings.button_label_1 != blank -%}
-              <a href="{{ block.settings.button_link_1 }}" class="button button--primary">{{ block.settings.button_label_1 }}</a>
+              <a href="{{ block.settings.button_link_1 | default: '/collections/all' }}" class="button button--primary">{{ block.settings.button_label_1 }}</a>
             {%- endif -%}
             </div>
         {%- endcase -%}
