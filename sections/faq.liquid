@@ -1,6 +1,63 @@
+<style>
+  .faq {
+    padding: 5rem 0;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .faq__heading {
+    text-align: center;
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 4rem;
+    font-weight: 300;
+  }
+  .faq__accordion {
+    border-top: 1px solid var(--color-border);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .faq__question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    font-size: 1.1rem;
+    font-family: var(--font-heading-family);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    list-style: none; /* Hide default marker */
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  .faq__question::-webkit-details-marker {
+    display: none;
+  }
+  .faq__question::after {
+    content: '+';
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+  }
+  .faq__item[open] .faq__question::after {
+    transform: rotate(45deg);
+  }
+  .faq__item[open] .faq__question {
+    color: var(--color-accent);
+  }
+  .faq__answer {
+    padding: 0 0 1.5rem 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--color-foreground);
+    opacity: 0.8;
+  }
+</style>
+
 <div class="faq page-width">
   {%- if section.settings.heading != blank -%}
-    <h2 class="center">{{ section.settings.heading | escape }}</h2>
+    <h2 class="faq__heading">{{ section.settings.heading | escape }}</h2>
   {%- endif -%}
 
   <div class="faq__accordion">
